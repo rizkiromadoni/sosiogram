@@ -14,9 +14,9 @@ const Navbar = () => {
             </Link>
         </div>
 
-        <div className='hidden md:flex w-[50%] text-sm items-center justify-between'>
+        <div className='hidden md:flex w-[70%] text-sm items-center justify-between'>
             <div className='flex gap-6 text-gray-600'>
-                <Link href="#" className='flex gap-2 items-center'>
+                <Link href="/" className='flex gap-2 items-center'>
                     <House width={16} height={16} className='text-blue-500 h-4 w-4' />
                     <span>Homepage</span>
                 </Link>
@@ -30,7 +30,7 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            <div className='hidden xl:flex p-2 bg-slate-100 items-center rounded-md'>
+            <div className='hidden lg:flex p-2 bg-slate-100 items-center rounded-md'>
                 <input type="text" placeholder='search...' className='bg-transparent outline-none' />
                 <Search width={14} height={14} />
             </div>
