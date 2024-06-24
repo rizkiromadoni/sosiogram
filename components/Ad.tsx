@@ -30,7 +30,7 @@ const Ad = ({ size }: { size: "sm" | "md" | "lg" }) => {
         </div>
         <p className={cn(size === "sm" ? "text-xs" : "text-sm")}>
           {
-            size === "sm" ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione, voluptate."
+            size === "sm" ? "Lorem ipsum dolor sit amet"
             : size === "md" ? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione, voluptate. Lorem ipsum dolor"
             : "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor minus tenetur, nobis autem quibusdam voluptate eaque? Nihil error alias autem adipisci laudantium, ratione illum quod. Quo eos sit voluptatum consectetur?"
           }
