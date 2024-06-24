@@ -18,7 +18,7 @@ const Post = () => {
                 <Image src="https://images.pexels.com/photos/19915666/pexels-photo-19915666/free-photo-of-laut-pria-laki-laki-lelaki.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" className="object-cover" fill/>
             </div>
             <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium tenetur suscipit saepe sit error praesentium sint amet aspernatur, deserunt, aliquam consectetur dolorem iste sequi illum voluptates totam ratione quaerat earum!
+                quaerat earum!
             </p>
         </div>
 

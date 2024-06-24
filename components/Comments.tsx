@@ -37,7 +37,7 @@ const Comments = () => {
             className="w-10 h-10 rounded-full"
           />
           <div className="flex flex-col gap-2 flex-1">
-            <span className="font-medium">Oliver Sykes</span>
+            <span className="font-medium">John Doe</span>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Voluptates, corporis aperiam vel impedit debitis ullam in,
