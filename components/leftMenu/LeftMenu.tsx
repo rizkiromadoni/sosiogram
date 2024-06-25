@@ -2,7 +2,7 @@ import React from "react";
 import ProfileCard from "./ProfileCard";
 import Link from "next/link";
 import { Book, Calendar, Clock, FileText, Images, List, Newspaper, Settings, Store, Video } from "lucide-react";
-import Ad from "./Ad";
+import Ad from "../Ad";
 
 const links = [
   {
