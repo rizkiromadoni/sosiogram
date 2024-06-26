@@ -1,7 +1,7 @@
 "use client";
 
-import { switchFollow } from "@/lib/actions";
-import { useState } from "react";
+import { switchBlock, switchFollow } from "@/lib/actions";
+import { useOptimistic, useState } from "react";
 
 interface Props {
   userId: string;
@@ -22,32 +22,63 @@ const UserInfoCardInteraction: React.FC<Props> = ({
     isFollowing: isFollowing,
     isRequestSent: isRequestSent,
     isUserBlocked: isUserBlocked,
-  })
+  });
 
   const follow = async () => {
+    switchOptimisticState("follow");
     try {
-      await switchFollow(userId)
-      setUserState(prev => ({
+      await switchFollow(userId);
+      setUserState((prev) => ({
         ...prev,
         isFollowing: !prev.isFollowing && false,
         isRequestSent: !prev.isFollowing && !prev.isRequestSent ? true : false,
+      }));
+    } catch (error) {}
+  };
 
+  const block = async () => {
+    switchOptimisticState("block");
+    try {
+      await switchBlock(userId);
+      setUserState((prev) => ({
+        ...prev,
+        isUserBlocked: !prev.isUserBlocked
       }))
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
+
+  const [optimisticState, switchOptimisticState] = useOptimistic(
+    userState,
+    (state, value: "follow" | "block") => {
+      if (value === "follow") {
+        return {
+          ...state,
+          isFollowing: !state.isFollowing && false,
+          isRequestSent: !state.isFollowing && !state.isRequestSent ? true : false,
+        }
+      }
+
+      return {
+        ...state,
+        isUserBlocked: !state.isUserBlocked
+      }
+    }
+  );
 
   return (
     <>
       <form action={follow}>
         <button className="w-full bg-blue-500 text-white text-sm rounded-md p-2">
-          {userState.isFollowing ? "Unfollow" : userState.isRequestSent ? "Requested" : "Follow"}
+          {optimisticState.isFollowing
+            ? "Unfollow"
+            : optimisticState.isRequestSent
+            ? "Requested"
+            : "Follow"}
         </button>
       </form>
-      <form action="" className="self-end">
+      <form action={block} className="self-end">
         <button className="text-red-500 text-xs cursor-pointer">
-          {userState.isUserBlocked ? "Unblock" : "Block"}
+          {optimisticState.isUserBlocked ? "Unblock" : "Block"}
         </button>
       </form>
     </>
