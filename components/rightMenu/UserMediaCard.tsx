@@ -1,8 +1,15 @@
-import { User } from '@prisma/client'
-import Image from 'next/image'
-import Link from 'next/link'
+import prisma from "@/lib/prisma";
+import { User } from "@prisma/client";
+import Image from "next/image";
+import Link from "next/link";
 
-const UserMediaCard = ({ user }: { user?: User }) => {
+const UserMediaCard = async ({ user }: { user: User }) => {
+  const posts = await prisma.post.findMany({
+    where: { userId: user.id, image: { not: null } },
+    take: 4,
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
     <div className="p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4">
       <div className="flex justify-between items-center font-medium">
@@ -12,15 +19,22 @@ const UserMediaCard = ({ user }: { user?: User }) => {
         </Link>
       </div>
 
-      <div className='flex gap-4 justify-between flex-wrap'>
-        {Array(4).fill(0).map((_, index) => (
-          <div className='relative w-[45%] h-24' key={index}>
-            <Image src="https://images.pexels.com/photos/16848795/pexels-photo-16848795/free-photo-of-liburan-orang-orang-masyarakat-rakyat.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" fill className='object-cover rounded-md' />
-          </div>
-        ))}
+      <div className="flex gap-4 justify-between flex-wrap">
+        {posts.length
+          ? posts.map((post) => (
+              <div className="relative w-[45%] h-24" key={post.id}>
+                <Image
+                  src={post.image!}
+                  alt=""
+                  fill
+                  className="object-cover rounded-md"
+                />
+              </div>
+            ))
+          : "No Media Found"}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserMediaCard
+export default UserMediaCard;
