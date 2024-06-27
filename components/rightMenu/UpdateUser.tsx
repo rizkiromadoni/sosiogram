@@ -5,11 +5,24 @@ import { User } from "@prisma/client";
 import { X } from "lucide-react";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useState } from "react";
+import { useFormState } from "react-dom";
 
 const UpdateUser = ({ user }: { user: User }) => {
   const [open, setOpen] = useState(false);
   const [cover, setCover] = useState<any>(user.cover)
+  const router = useRouter()
+
+  const [state, formAction, isPending] = useFormState(updateProfile, {
+    success: false,
+    error: false
+  })
+
+  const handleClose = () => {
+    setOpen(false)
+    state.success && router.refresh()
+  }
 
   return (
     <div>
@@ -22,7 +35,7 @@ const UpdateUser = ({ user }: { user: User }) => {
       {open && (
         <div className="absolute h-screen w-screen top-0 left-0 bg-black bg-opacity-65 flex items-center justify-center z-50">
           <form
-            action={(formData) => updateProfile(formData, cover?.secure_url)}
+            action={(formData) => formAction({ formData, cover: cover?.secure_url })}
             className="relative p-12 bg-white shadow-md flex flex-col gap-2 w-full md:w-1/2"
           >
             <h1>Update Profile</h1>
@@ -122,11 +135,15 @@ const UpdateUser = ({ user }: { user: User }) => {
               Update
             </button>
 
+            {(state.success || state.error) && (
+              <span>{state.success ? "Profile updated" : "Something went wrong"}</span>
+            )}
+
             <X
               width={20}
               height={20}
               className="absolute w-6 h-6 right-3 top-3 cursor-pointer"
-              onClick={() => setOpen(false)}
+              onClick={handleClose}
             />
           </form>
         </div>

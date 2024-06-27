@@ -105,9 +105,16 @@ export const declineFollowRequest = async (userId: string) => {
     }
 }
 
-export const updateProfile = async (formData: FormData, cover: string) => {
+export const updateProfile = async (
+    prevState: { success: boolean, error: boolean },
+    payload: { formData: FormData, cover: string }
+) => {
     const { userId } = auth()
-    if (!userId) throw new Error("Unauthorized")
+    if (!userId) {
+        return { ...prevState, error: true }
+    }
+
+    const { formData, cover } = payload
 
     const fields = Object.fromEntries(formData)
     const filteredFields = Object.fromEntries(
@@ -125,16 +132,20 @@ export const updateProfile = async (formData: FormData, cover: string) => {
     })
 
     const validated = pofileSchema.safeParse({...filteredFields, cover})
-    if (!validated.success) throw new Error("Invalid data")
+    if (!validated.success) {
+        return { ...prevState, error: true }
+    }
 
     try {
         await prisma.user.update({
             where: { id: userId },
             data: validated.data
         })
+
+        return { ...prevState, success: true }
     } catch (error) {
         console.log(error)
-        throw new Error("Something went wrong")
+        return { ...prevState, error: true }
     }
 }
 
