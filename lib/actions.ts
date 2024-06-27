@@ -105,7 +105,7 @@ export const declineFollowRequest = async (userId: string) => {
     }
 }
 
-export const updateProfile = async (formData: FormData) => {
+export const updateProfile = async (formData: FormData, cover: string) => {
     const { userId } = auth()
     if (!userId) throw new Error("Unauthorized")
 
@@ -124,7 +124,7 @@ export const updateProfile = async (formData: FormData) => {
         website: z.string().max(60).optional(),
     })
 
-    const validated = pofileSchema.safeParse(filteredFields)
+    const validated = pofileSchema.safeParse({...filteredFields, cover})
     if (!validated.success) throw new Error("Invalid data")
 
     try {
