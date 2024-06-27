@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import prisma from "./prisma"
+import { z } from "zod"
 
 export const switchFollow = async (userId: string) => {
     const { userId: currentUserId } = auth()
@@ -103,3 +104,49 @@ export const declineFollowRequest = async (userId: string) => {
         throw new Error("Something went wrong")
     }
 }
+
+export const updateProfile = async (formData: FormData) => {
+    const { userId } = auth()
+    if (!userId) throw new Error("Unauthorized")
+
+    const fields = Object.fromEntries(formData)
+    const filteredFields = Object.fromEntries(
+        Object.entries(fields).filter(([_, value]) => value !== "")
+    )
+    const pofileSchema = z.object({
+        cover: z.string().optional(),
+        name: z.string().max(60).optional(),
+        surname: z.string().max(60).optional(),
+        description: z.string().max(225).optional(),
+        city: z.string().max(60).optional(),
+        work: z.string().max(60).optional(),
+        school: z.string().max(60).optional(),
+        website: z.string().max(60).optional(),
+    })
+
+    const validated = pofileSchema.safeParse(filteredFields)
+    if (!validated.success) throw new Error("Invalid data")
+
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: validated.data
+        })
+    } catch (error) {
+        console.log(error)
+        throw new Error("Something went wrong")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

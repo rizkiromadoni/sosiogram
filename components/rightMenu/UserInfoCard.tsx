@@ -45,7 +45,7 @@ const UserInfoCard = async ({ user }: { user: User }) => {
       <div className="flex justify-between items-center font-medium">
         <span className="text-gray-500">User Information</span>
         {currentUserId === user.id ? (
-          <UpdateUser />
+          <UpdateUser user={user} />
         ) : (
           <Link href="#" className="text-blue-500 text-xs">
           See all
@@ -64,8 +64,7 @@ const UserInfoCard = async ({ user }: { user: User }) => {
         </div>
         {user?.description && (
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi sint
-            quos, quasi cumque esse ad
+            {user.description}
           </p>
         )}
 
