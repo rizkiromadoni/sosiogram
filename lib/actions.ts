@@ -173,7 +173,28 @@ export const switchLike = async (postId: number) => {
     }
 }
 
+export const addComment = async (postId: number, desc: string) => {
+    const { userId } = auth()
+    if (!userId) throw new Error("Unauthorized")
+        
+    try {
+        const newComment = await prisma.comment.create({
+            data: {
+                postId,
+                userId,
+                desc
+            },
+            include: {
+                user: true
+            }
+        })
 
+        return newComment
+    } catch (error) {
+        console.log(error)
+        throw new Error("Something went wrong")
+    }
+}
 
 
 

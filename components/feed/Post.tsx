@@ -45,7 +45,7 @@ const Post = ({ post }: { post: PostProps }) => {
 
       <PostInteraction postId={post.id} likes={post.likes.map(x => x.userId)} commentNumber={post._count.comments} />
 
-      <Comments />
+      <Comments postId={post.id} />
     </div>
   );
 };
