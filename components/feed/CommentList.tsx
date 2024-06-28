@@ -78,11 +78,6 @@ const CommentList = ({
                 className="bg-transparent outline-none"
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <SmilePlus
-                className="text-yellow-500 cursor-pointer"
-                width={16}
-                height={16}
-              />
             </form>
           </div>
         </div>

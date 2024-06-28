@@ -3,6 +3,7 @@
 import { auth } from "@clerk/nextjs/server"
 import prisma from "./prisma"
 import { z } from "zod"
+import { revalidatePath } from "next/cache"
 
 export const switchFollow = async (userId: string) => {
     const { userId: currentUserId } = auth()
@@ -193,6 +194,32 @@ export const addComment = async (postId: number, desc: string) => {
     } catch (error) {
         console.log(error)
         throw new Error("Something went wrong")
+    }
+}
+
+export const addPost = async (formData: FormData, image: string) => {
+    const { userId } = auth()
+    if (!userId) throw new Error("Unauthorized")
+
+    const desc = formData.get("description")
+    if (!desc) return;
+
+    const Desc = z.string().min(1).max(225)
+    const validated = Desc.safeParse(desc)
+    if (!validated.success) return;
+
+    try {
+        await prisma.post.create({
+            data: {
+                desc: validated.data,
+                userId,
+                image
+            }
+        })
+
+        revalidatePath("/")
+    } catch (error) {
+        console.log(error)
     }
 }
 
