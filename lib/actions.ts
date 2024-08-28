@@ -223,10 +223,51 @@ export const addPost = async (formData: FormData, image: string) => {
     }
 }
 
+export const addStory = async (image: string) => {
+    const { userId } = auth()
+    if (!userId) throw new Error("Unauthorized")
 
+    try {
+        const existingStory = await prisma.story.findFirst({
+            where: { userId, expiresAt: { gt: new Date() } }
+        })
+        if (existingStory) {
+            await prisma.story.delete({
+                where: { id: existingStory.id },
+            })
+        }
 
+        const newStory = await prisma.story.create({
+            data: {
+                userId,
+                image,
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+            },
+            include: {
+                user: true
+            }
+        })
 
+        return newStory
+    } catch (error) {
+        console.log(error)
+    }
+}
 
+export const deletePost = async (postId: number) => {
+    const { userId } = auth()
+    if (!userId) throw new Error("Unauthorized")
+
+    try {
+        await prisma.post.delete({
+            where: { id: postId }
+        })
+
+        revalidatePath("/")
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 
